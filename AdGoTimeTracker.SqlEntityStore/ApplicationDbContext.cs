@@ -7,13 +7,8 @@ namespace AdGoTimeTracker.SqlEntityStore
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\mssqllocaldb;Database=AdGo;ConnectRetryCount=0");
-        }
+        }        
 
-        public DbSet<TimeTrackerEntry> TimeTrackerEntries { get; set; }
+        public DbSet<TimeTrackerEntryEntity> TimeTrackerEntries { get; set; }
     }
 }

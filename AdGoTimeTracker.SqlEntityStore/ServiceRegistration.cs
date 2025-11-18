@@ -6,11 +6,10 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceRegistration
     {
-        public static IServiceCollection AddLocalDbTimeTrackerEntryStore(this IServiceCollection services, string databaseName)
+        public static IServiceCollection AddSqlServerTimeTrackerEntryStore(this IServiceCollection services, string connectionString)
         {
             services.AddDbContextFactory<ApplicationDbContext>(
-                options => options.UseSqlServer(
-                    $"Server=(localdb)\\mssqllocaldb;Database={databaseName};ConnectRetryCount=0"));
+                options => options.UseSqlServer(connectionString));
             services.AddScoped<ITimeTrackerEntryStore, SqlEntityTimeTrackerEntryStore>();
             return services;
         }

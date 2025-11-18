@@ -4,6 +4,10 @@
 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Timer" IconColor="Color.Error" OnClick="ToggleStopwatch">@CurrentButtonText</MudButton>
 
 @code {
+
+    [Parameter]
+    public EventCallback<StopwatchState> OnStateChanged { get; set; }
+
     public enum StopwatchState
     {
         Reset,
@@ -12,6 +16,7 @@
     }
 
     private StopwatchState currentState = StopwatchState.Reset;
+
     private Stopwatch stopwatch = new Stopwatch();
     private System.Threading.Timer? timer = null;
 
@@ -23,23 +28,28 @@
         _ => throw new NotSupportedException("Invalid Stopwatch State")
     };
 
+    private void SetState(StopwatchState state)
+    {
+        currentState = state;
+        OnStateChanged.InvokeAsync(currentState);
+    }
 
     private void ToggleStopwatch()
     {
         switch(currentState)
         {
             case StopwatchState.Reset:
-                currentState = StopwatchState.Running;
+                SetState(StopwatchState.Running);
                 stopwatch.Start();
-                timer = new Timer(_ => InvokeAsync(StateHasChanged), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+                timer = new Timer(_ => InvokeAsync(StateHasChanged), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));                
                 break;
             case StopwatchState.Running:
-                currentState = StopwatchState.Stopped;
+                SetState(StopwatchState.Stopped);
                 stopwatch.Stop();
-                timer?.Dispose();
+                timer?.Dispose();                
                 break;
             case StopwatchState.Stopped:
-                currentState = StopwatchState.Reset;
+                SetState(StopwatchState.Reset);
                 stopwatch.Reset();
                 break;
         }

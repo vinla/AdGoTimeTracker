@@ -3,7 +3,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 //builder.Services.AddSingleton<AdGoTimeTracker.Core.Interfaces.ITimeTrackerEntryStore, AdGoTimeTracker.MemoryStore.InMemoryTimeTrackerEntryStore>();
-builder.Services.AddLocalDbTimeTrackerEntryStore("AdGo");
+//builder.Services.AddLocalDbTimeTrackerEntryStore("AdGo");
+builder.Services.AddSqlServerTimeTrackerEntryStore("Server=localhost;Database=AdGo;User Id=sa;Password=password123!;Encrypt=False;TrustServerCertificate=True");
 builder.Services.AddControllers();
 builder.Services.AddCors();
 

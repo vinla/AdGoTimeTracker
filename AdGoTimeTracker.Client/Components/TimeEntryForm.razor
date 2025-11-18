@@ -1,35 +1,57 @@
-﻿@using AdGoTimeTracker.Client.Services
+﻿@using AdGoTimeTracker.Client.Models
+@using AdGoTimeTracker.Client.Services
+@using AdGoTimeTracker.Client.Validators
 @using AdGoTimeTracker.Core.Models
 @inject ITimeTrackerService TimeTrackerService
+@inject TimeProvider TimeProvider
 
 <h3>Add a Time Entry</h3>
 
-<MudForm Spacing="2" Model="@formData" @ref="@form">
-    <MudTextField T="string" Label="Describe the task..." @bind-Value="formData.Description" />    
-    <MudTimePicker Label="Start Time" @bind-Time="formData.StartTime" />
-    <MudTimePicker Label="End Time" @bind-Time="formData.EndTime"/>
+<MudForm Spacing="2" Model="@formData" @ref="@form" Validation="@(validator.ValidateValue)">
+    <MudTextField T="string" Label="Describe the task..." @bind-Value="formData.Description" For="@(()=>formData.Description)"/>
+    <MudTimePicker Label="Start Time" @bind-Time="formData.StartTime" For="@(() => formData.StartTime)" />
+    <MudTimePicker Label="End Time" @bind-Time="formData.EndTime" For="@(() => formData.EndTime)" />
+    <StopwatchButton OnStateChanged="OnStopWatchStateChange" />
     <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Save Entry</MudButton>
 </MudForm>
 
 @code {
     MudForm form = null!; 
-    FormModel formData = new FormModel();
+    TimeTrackerEntryFormData formData = new();
+    TimeTrackerEntryFormDataValidator validator = new TimeTrackerEntryFormDataValidator();
 
-    private class FormModel
+    private TimeSpan TimeOfDayToMinute(DateTimeOffset dateTime)
     {
-        public string Description { get; set; } = string.Empty;
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
+        return new TimeSpan(dateTime.TimeOfDay.Hours, dateTime.TimeOfDay.Minutes, 0);
+    }
+
+    private void OnStopWatchStateChange(StopwatchButton.StopwatchState state)
+    {
+        if(state == StopwatchButton.StopwatchState.Running)
+        {
+            formData.StartTime = TimeOfDayToMinute(TimeProvider.GetLocalNow());
+        }
+        else if(state == StopwatchButton.StopwatchState.Stopped)
+        {
+            formData.EndTime = TimeOfDayToMinute(TimeProvider.GetLocalNow());
+        }
     }
 
     private async Task Submit()
     {
-        var newEntry = new TimeTrackerEntry
+        await form.Validate();
+
+        if (form.IsValid)
         {
-            Description = formData.Description,
-            StartTime = new DateTimeOffset(DateTime.Today.Add(formData.StartTime ?? TimeSpan.Zero)),
-            EndTime = new DateTimeOffset(DateTime.Today.Add(formData.EndTime ?? TimeSpan.Zero))
-        };
-        await TimeTrackerService.SaveEntryAsync(newEntry);
+            var today = TimeProvider.GetLocalNow().Date;
+
+            var newEntry = new TimeTrackerEntry
+                {
+                    Description = formData.Description,
+                    StartTime = new DateTimeOffset(today.Add(formData.StartTime ?? TimeSpan.Zero)),
+                    EndTime = new DateTimeOffset(today.Add(formData.EndTime ?? TimeSpan.Zero))
+                };
+            await TimeTrackerService.SaveEntryAsync(newEntry);
+        }
     }
 }
