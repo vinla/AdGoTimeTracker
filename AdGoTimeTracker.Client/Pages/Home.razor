@@ -1,0 +1,23 @@
+﻿@page "/"
+@using AdGoTimeTracker.Client.Components
+@using AdGoTimeTracker.Client.Services
+@inject ITimeTrackerService TimeTrackerService
+
+<PageTitle>AdGo Time Tracker</PageTitle>
+
+<TimeTrackerList Entries="@TimeTrackerService.TimeTrackerEntries"/>
+<TimeEntryForm />
+<StopwatchButton />
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await TimeTrackerService.LoadEntries();
+        TimeTrackerService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        TimeTrackerService.OnChange -= StateHasChanged;
+    }
+}

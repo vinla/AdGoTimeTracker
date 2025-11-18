@@ -1,0 +1,47 @@
+﻿@using System.Diagnostics
+
+
+<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Timer" IconColor="Color.Error" OnClick="ToggleStopwatch">@CurrentButtonText</MudButton>
+
+@code {
+    public enum StopwatchState
+    {
+        Reset,
+        Stopped,
+        Running        
+    }
+
+    private StopwatchState currentState = StopwatchState.Reset;
+    private Stopwatch stopwatch = new Stopwatch();
+    private System.Threading.Timer? timer = null;
+
+    private string CurrentButtonText => currentState switch
+    {
+        StopwatchState.Reset => "Start Task",
+        StopwatchState.Running => $"{stopwatch.Elapsed:hh\\:mm\\:ss} - Stop",
+        StopwatchState.Stopped => $"{stopwatch.Elapsed:hh\\:mm\\:ss} - Reset",
+        _ => throw new NotSupportedException("Invalid Stopwatch State")
+    };
+
+
+    private void ToggleStopwatch()
+    {
+        switch(currentState)
+        {
+            case StopwatchState.Reset:
+                currentState = StopwatchState.Running;
+                stopwatch.Start();
+                timer = new Timer(_ => InvokeAsync(StateHasChanged), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+                break;
+            case StopwatchState.Running:
+                currentState = StopwatchState.Stopped;
+                stopwatch.Stop();
+                timer?.Dispose();
+                break;
+            case StopwatchState.Stopped:
+                currentState = StopwatchState.Reset;
+                stopwatch.Reset();
+                break;
+        }
+    }
+}

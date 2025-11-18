@@ -1,0 +1,35 @@
+﻿@using AdGoTimeTracker.Client.Services
+@using AdGoTimeTracker.Core.Models
+@inject ITimeTrackerService TimeTrackerService
+
+<h3>Add a Time Entry</h3>
+
+<MudForm Spacing="2" Model="@formData" @ref="@form">
+    <MudTextField T="string" Label="Describe the task..." @bind-Value="formData.Description" />    
+    <MudTimePicker Label="Start Time" @bind-Time="formData.StartTime" />
+    <MudTimePicker Label="End Time" @bind-Time="formData.EndTime"/>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="@(async () => await Submit())">Save Entry</MudButton>
+</MudForm>
+
+@code {
+    MudForm form = null!; 
+    FormModel formData = new FormModel();
+
+    private class FormModel
+    {
+        public string Description { get; set; } = string.Empty;
+        public TimeSpan? StartTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
+    }
+
+    private async Task Submit()
+    {
+        var newEntry = new TimeTrackerEntry
+        {
+            Description = formData.Description,
+            StartTime = new DateTimeOffset(DateTime.Today.Add(formData.StartTime ?? TimeSpan.Zero)),
+            EndTime = new DateTimeOffset(DateTime.Today.Add(formData.EndTime ?? TimeSpan.Zero))
+        };
+        await TimeTrackerService.SaveEntryAsync(newEntry);
+    }
+}

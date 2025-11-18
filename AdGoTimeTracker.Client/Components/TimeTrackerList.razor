@@ -1,0 +1,22 @@
+﻿@using AdGoTimeTracker.Core.Models
+<h3>TimeTrackerList</h3>
+
+<MudTable Items="@Entries" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Started</MudTh>
+        <MudTh>Finished</MudTh>
+        <MudTh>Description</MudTh>
+        <MudTh>Duration</MudTh>        
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Started">@context.StartTime</MudTd>
+        <MudTd DataLabel="Finished">@context.EndTime</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+        <MudTd DataLabel="Duration">@context.Duration</MudTd>        
+    </RowTemplate>
+</MudTable>
+
+@code {
+    [Parameter]
+    public IEnumerable<TimeTrackerEntry> Entries { get; set; } = Enumerable.Empty<TimeTrackerEntry>();
+}
