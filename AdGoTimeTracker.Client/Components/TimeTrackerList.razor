@@ -1,18 +1,19 @@
 ﻿@using AdGoTimeTracker.Core.Models
-<h3>TimeTrackerList</h3>
 
 <MudTable Items="@Entries" Hover="true" Breakpoint="Breakpoint.Sm">
     <HeaderContent>
+        <MudTh>Date</MudTh>
         <MudTh>Started</MudTh>
         <MudTh>Finished</MudTh>
         <MudTh>Description</MudTh>
         <MudTh>Duration</MudTh>        
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Started">@context.StartTime</MudTd>
-        <MudTd DataLabel="Finished">@context.EndTime</MudTd>
+        <MudTd DataLabel="Date">@context.StartTime.ToString("dd/MM/yyyy")</MudTd>
+        <MudTd DataLabel="Started">@context.StartTime.ToString("HH:mm")</MudTd>
+        <MudTd DataLabel="Finished">@context.EndTime.ToString("HH:mm")</MudTd>
         <MudTd DataLabel="Description">@context.Description</MudTd>
-        <MudTd DataLabel="Duration">@context.Duration</MudTd>        
+        <MudTd DataLabel="Duration">@context.Duration.ToString(@"hh\:mm")</MudTd>
     </RowTemplate>
 </MudTable>
 

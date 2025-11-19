@@ -4,6 +4,7 @@
 @using AdGoTimeTracker.Core.Models
 @inject ITimeTrackerService TimeTrackerService
 @inject TimeProvider TimeProvider
+@inject ISnackbar Notifications
 
 <h3>Add a Time Entry</h3>
 
@@ -51,7 +52,17 @@
                     StartTime = new DateTimeOffset(today.Add(formData.StartTime ?? TimeSpan.Zero)),
                     EndTime = new DateTimeOffset(today.Add(formData.EndTime ?? TimeSpan.Zero))
                 };
-            await TimeTrackerService.SaveEntryAsync(newEntry);
+
+            try
+            {
+                await TimeTrackerService.SaveEntryAsync(newEntry);
+                Notifications.Add("Entry added", Severity.Success);
+            }
+            catch(HttpRequestException)
+            {
+                Notifications.Add("Could not save the entry", Severity.Error);
+            }
+
         }
     }
 }

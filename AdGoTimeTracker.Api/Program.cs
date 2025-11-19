@@ -1,10 +1,25 @@
+using AdGoTimeTracker.Api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddSingleton<AdGoTimeTracker.Core.Interfaces.ITimeTrackerEntryStore, AdGoTimeTracker.MemoryStore.InMemoryTimeTrackerEntryStore>();
-//builder.Services.AddLocalDbTimeTrackerEntryStore("AdGo");
-builder.Services.AddSqlServerTimeTrackerEntryStore("Server=localhost;Database=AdGo;User Id=sa;Password=password123!;Encrypt=False;TrustServerCertificate=True");
+var storeType = builder.Configuration.GetValue<string>("STORE_TYPE");
+switch(storeType)
+{
+    case "in-memory":
+        builder.Services.AddSingleton<AdGoTimeTracker.Core.Interfaces.ITimeTrackerEntryStore, AdGoTimeTracker.MemoryStore.InMemoryTimeTrackerEntryStore>();
+        break;
+    case "mssql":
+        var connectionString = builder.Configuration.GetValue<string>("CONNECTION_STRING");
+        builder.Services.AddSqlServerTimeTrackerEntryStore(connectionString);
+        break;
+    default:
+        throw new InvalidOperationException("Unable to start service, store type has not been configured correctly");
+}
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContext, DummyUserContext>();
 builder.Services.AddControllers();
 builder.Services.AddCors();
 

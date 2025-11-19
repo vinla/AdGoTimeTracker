@@ -2,31 +2,32 @@
 using AdGoTimeTracker.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AdGoTimeTracker.SqlEntityStore
-{
-    public class SqlEntityTimeTrackerEntryStore(ApplicationDbContext dbContext) : ITimeTrackerEntryStore
-    {
-        public Task AddEntryAsync(TimeTrackerEntry entry)
-        {
-            var entity = new TimeTrackerEntryEntity
-            {
-                Description = entry.Description,
-                EndTime = entry.EndTime.DateTime,
-                StartTime = entry.StartTime.DateTime,
-            };
-            dbContext.TimeTrackerEntries.Add(entity);
-            return dbContext.SaveChangesAsync();
-        }
+namespace AdGoTimeTracker.SqlEntityStore;
 
-        public async Task<IEnumerable<TimeTrackerEntry>> GetAllAsync()
+public class SqlEntityTimeTrackerEntryStore(ApplicationDbContext dbContext) : ITimeTrackerEntryStore
+{
+    public Task AddEntryAsync(TimeTrackerEntry entry)
+    {
+        var entity = new TimeTrackerEntryEntity
         {
-            var data = await dbContext.TimeTrackerEntries.ToListAsync();
-            return data.Select(e => new TimeTrackerEntry
-            {
-                Description = e.Description,
-                EndTime = e.EndTime,
-                StartTime = e.StartTime,
-            });
-        }
+            UserId = entry.UserId,
+            Description = entry.Description,
+            EndTime = entry.EndTime.DateTime,
+            StartTime = entry.StartTime.DateTime,
+        };
+        dbContext.TimeTrackerEntries.Add(entity);
+        return dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<TimeTrackerEntry>> GetAllByUserIdAsync(string userId)
+    {
+        var data = await dbContext.TimeTrackerEntries.Where(tte => tte.UserId == userId).ToListAsync();
+        return data.Select(e => new TimeTrackerEntry
+        {
+            UserId = e.UserId,
+            Description = e.Description,
+            EndTime = e.EndTime,
+            StartTime = e.StartTime,
+        });
     }
 }

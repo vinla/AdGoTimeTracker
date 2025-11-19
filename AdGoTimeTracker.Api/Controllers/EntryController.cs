@@ -2,24 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using AdGoTimeTracker.Core.Models;
 using AdGoTimeTracker.Core.Interfaces;
 
-namespace AdGoTimeTracker.Api.Controllers
-{
-    [ApiController]
-    [Route("/api/entries")]
-    public class EntryController(ITimeTrackerEntryStore store) : ControllerBase
-    {
-        [HttpGet]
-        public Task<IEnumerable<TimeTrackerEntry>> Get()
-        {
-            return store.GetAllAsync();
-        }
+namespace AdGoTimeTracker.Api.Controllers;
 
-        [HttpPost]
-        public Task SaveEntry([FromBody] TimeTrackerEntry entry)
-        {
-            // TODO: Generate ID
-            Console.WriteLine("Saving entry: " + entry.Description);
-            return store.AddEntryAsync(entry);
-        }
+[ApiController]
+[Route("/api/entries")]
+public class EntryController(ITimeTrackerEntryStore store, IUserContext userContext) : ControllerBase
+{
+    [HttpGet]
+    public Task<IEnumerable<TimeTrackerEntry>> Get()
+    {
+        return store.GetAllByUserIdAsync(userContext.SignedInUser.Id);
+    }
+
+    [HttpPost]
+    public Task SaveEntry([FromBody] TimeTrackerEntry entry)
+    {                        
+        entry.UserId = userContext.SignedInUser.Id;
+        return store.AddEntryAsync(entry);
     }
 }

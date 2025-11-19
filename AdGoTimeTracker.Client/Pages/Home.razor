@@ -5,8 +5,32 @@
 
 <PageTitle>AdGo Time Tracker</PageTitle>
 
-<TimeTrackerList Entries="@TimeTrackerService.TimeTrackerEntries"/>
-<TimeEntryForm />
+<ErrorBoundary>
+    <ChildContent>        
+        <MudGrid>
+            <MudItem xs="8">
+                @if(TimeTrackerService.FetchStatus == FetchStatus.Done)
+                {
+                    <TimeTrackerList Entries="@TimeTrackerService.TimeTrackerEntries" />
+                }
+                else if(TimeTrackerService.FetchStatus == FetchStatus.Failed)
+                {
+                    <MudAlert Severity="Severity.Error">Unable to list time tracker data.</MudAlert>
+                }
+            </MudItem>
+            <MudItem xs="4">
+                <MudPaper Class="mud-width-full">
+                    <div style="padding: 16px">
+                    <TimeEntryForm />
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>                
+    </ChildContent>
+    <ErrorContent>        
+        <MudAlert Severity="Severity.Error">We're sorry but the app isn't working right now.</MudAlert>
+    </ErrorContent>
+</ErrorBoundary>
 
 @code {
     protected override async Task OnInitializedAsync()

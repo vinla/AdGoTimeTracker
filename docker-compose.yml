@@ -1,4 +1,21 @@
 services:
+    blazor:
+        build:
+            context: .
+            dockerfile: blazor.dockerFile
+        image: timetracker-blazor
+        ports:
+            - "3000:8080"
+    api:
+        build:
+            context: .
+            dockerfile: api.Dockerfile
+        image: timetracker-api
+        environment: 
+            - STORE_TYPE=mssql
+            - CONNECTION_STRING=Server=db;Database=AdGo;User Id=sa;Password=password123!;Encrypt=False;TrustServerCertificate=True
+        ports:
+            - "5000:8080"
     db:
         image: "mcr.microsoft.com/mssql/server:2022-latest"
         ports:

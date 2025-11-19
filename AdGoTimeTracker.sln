@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdGoTimeTracker.MemoryStore
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdGoTimeTracker.SqlEntityStore", "AdGoTimeTracker.SqlEntityStore\AdGoTimeTracker.SqlEntityStore.csproj", "{A218A39A-27F7-4B85-AA6B-3237B8B1A7E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdGoTimeTracker.Client.UnitTests", "AdGoTimeTracker.Client.UnitTests\AdGoTimeTracker.Client.UnitTests.csproj", "{13260C08-42F5-4937-8C48-2CEE70F41435}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,18 @@ Global
 		{A218A39A-27F7-4B85-AA6B-3237B8B1A7E9}.Release|x64.Build.0 = Release|Any CPU
 		{A218A39A-27F7-4B85-AA6B-3237B8B1A7E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{A218A39A-27F7-4B85-AA6B-3237B8B1A7E9}.Release|x86.Build.0 = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|x64.Build.0 = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Debug|x86.Build.0 = Debug|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|x64.ActiveCfg = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|x64.Build.0 = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|x86.ActiveCfg = Release|Any CPU
+		{13260C08-42F5-4937-8C48-2CEE70F41435}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

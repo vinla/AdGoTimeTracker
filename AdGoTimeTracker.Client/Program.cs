@@ -6,7 +6,7 @@ builder.Services.AddSingleton(sp =>
     new HttpClient
     {
         BaseAddress = new Uri(builder.Configuration["ApiUrl"] ??
-            "http://localhost:5007")
+            "http://localhost:5000")
     });
 builder.Services.AddSingleton<AdGoTimeTracker.Client.Services.ITimeTrackerService, AdGoTimeTracker.Client.Services.TimeTrackerService>();
 builder.Services.AddMudServices();
